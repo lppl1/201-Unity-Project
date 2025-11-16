@@ -47,6 +47,9 @@ private bool isDead = false;
 
  // UI object to display winning text.
  public GameObject winTextObject;
+ 
+ // exit portal/door 
+ public GameObject exit;
 
  // Start is called before the first frame update.
  void Start(){
@@ -207,29 +210,30 @@ private bool isDead = false;
  }
 
  // Function to update the displayed count of "PickUp" objects collected.
- void SetCountText() 
-    {
+   void SetCountText() {
  // Update the count text with the current count.
         countText.text = "Count: " + count.ToString();
 
  // Check if the count has reached or exceeded the win condition.
- if (count >= 12  && !isDead)
-        {
- // Display the win text.
-            gameOver = true;
+      if (count >= 12  && !isDead){
+         //showing exit 
+         if (exit != null){
+            exit.SetActive(true);
+         }
+ // Display the exit text (still called winText).
             winTextObject.SetActive(true);
-            winTextObject.GetComponent<TextMeshProUGUI>().text = "You Win!\nPress R to Restart";
+            winTextObject.GetComponent<TextMeshProUGUI>().text = "Find the Exit!";
  // Destroy the enemy GameObject.
             Destroy(GameObject.FindGameObjectWithTag("Enemy"));
-        }
-    }
+      }
+   }
 
    private void OnCollisionEnter(Collision collision){
-   if (collision.gameObject.CompareTag("Enemy")){
+      if (collision.gameObject.CompareTag("Enemy")){
  // Destroy the current object 
  //not now because respawn
  // Update the winText to display "You Lose!"
-      LoseLife(true);
-   }
+         LoseLife(true);
+      }
    }
 }
