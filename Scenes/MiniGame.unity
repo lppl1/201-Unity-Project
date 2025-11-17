@@ -3471,7 +3471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pet
   player: {fileID: 1536777825}
-  speed: 3
+  speed: 5
   height: 1.5
 --- !u!136 &572338009
 CapsuleCollider:

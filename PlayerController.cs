@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour{
- // Rigidbody of the player.
+ // rigidbody of player
  private Rigidbody rb; 
 
- // Variable to keep track of collected "PickUp" objects.
+ // variable for pickups
  public int count;
 //troubleshooting
 public int stage1Count = 0;
@@ -30,67 +30,65 @@ public int lives = 3;
 public Transform respawn;
 //livetext UI
  public TextMeshProUGUI livesText;
- // Movement along X and Y axes.
+ // movement along x and y axis
  private float movementX;
  private float movementY;
 //gameover?
 private bool gameOver = false;
 //respawn position
 private Vector3 nextRespawnPos;
- // Speed at which the player moves.
+ // player speed
  public float speed = 0;
 //no premature winning
 private bool isDead = false;
 
- // UI text component to display count of "PickUp" objects collected.
+ // UI text to count pickups
  public TextMeshProUGUI countText;
 
- // UI object to display winning text.
+ // UI to display wintext
  public GameObject winTextObject;
  
  // exit portal/door 
  public GameObject exit;
 
- // Start is called before the first frame update.
- void Start(){
- // Get and store the Rigidbody component attached to the player.
-        rb = GetComponent<Rigidbody>();
+ // start called before first frame update
+   void Start(){
+ // get and store rigidbody component to player
+         rb = GetComponent<Rigidbody>();
 
- // Initialize count to zero.
-        count = 0;
+ // intialize count to zero
+         count = 0;
 
- // Update the count display.
-        SetCountText();
+ // update count display
+         SetCountText();
 
- // Initially set the win text to be inactive.
-        winTextObject.SetActive(false);
+ // initially set text to false
+         winTextObject.SetActive(false);
 
    //more animator stuff
          animator = GetComponent<Animator>();
    // lives stuff
-   if (livesText != null)
-        livesText.text = "Lives: " + lives;
-}
+      if (livesText != null)
+         livesText.text = "Lives: " + lives;
+   }
  
- // This function is called when a move input is detected.
- void OnMove(InputValue movementValue)
-    {
- // Convert the input value into a Vector2 for movement.
+ // function is called when move input detected
+   void OnMove(InputValue movementValue){
+ // convert input value into Vector2
         Vector2 movementVector = movementValue.Get<Vector2>();
 
- // Store the X and Y components of the movement.
+ // store x and y components into variables
         movementX = movementVector.x; 
         movementY = movementVector.y; 
-    }
+   }
 
- // FixedUpdate is called once per fixed frame-rate frame.
- private void FixedUpdate() 
-    {
- // Create a 3D movement vector using the X and Y inputs.
+ // called once per frame to fix frame rate
+   private void FixedUpdate(){
+ // create 3D movement vector using x and y
         Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
 
- // Apply force to the Rigidbody to move the player.
-        rb.linearVelocity = new Vector3(movement.x * speed, rb.linearVelocity.y, movement.z * speed); 
+ // apply force to rigidbody to move player
+         rb.linearVelocity = new Vector3(movement.x * speed, rb.linearVelocity.y, movement.z * speed); 
 
          float movementMagnitude = new Vector2(movementX, movementY).magnitude;
          //safety check
@@ -101,12 +99,13 @@ private bool isDead = false;
             transform.forward = movement.normalized;
          }
        
-    }
+   }
    //adding jump, dash, and pause
    void OnJump(InputValue value){
     rb.AddForce(Vector3.up * jump, ForceMode.Impulse);
    }
    void Update(){
+      //pause
       if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) {
          Time.timeScale = Time.timeScale == 0 ? 1 : 0;
       }
@@ -153,16 +152,16 @@ private bool isDead = false;
    } 
  
  void OnTriggerEnter(Collider other) {
- // Check if the object the player collided with has the "PickUp" tag.
+ // check if object collided with player and pickup tag
  if (other.gameObject.CompareTag("PickUp")) 
         {
- // Deactivate the collided object (making it disappear).
+ // deactivate collided object
       other.gameObject.SetActive(false);
 
- // Increment the count of "PickUp" objects collected.
+ // increment pickup count
             count = count + 1;
 
- // Update the count display.
+ // update count display
             SetCountText();
         }
 //extra if/else for door managament & pickup music
@@ -209,30 +208,28 @@ private bool isDead = false;
    }
  }
 
- // Function to update the displayed count of "PickUp" objects collected.
+ // function to update text with pickups collected
    void SetCountText() {
- // Update the count text with the current count.
+ // updating count text to current amount
         countText.text = "Count: " + count.ToString();
 
- // Check if the count has reached or exceeded the win condition.
+ // check if the count has reached or exceeded win condition
       if (count >= 12  && !isDead){
          //showing exit 
          if (exit != null){
             exit.SetActive(true);
          }
- // Display the exit text (still called winText).
+ // display exit text 
             winTextObject.SetActive(true);
             winTextObject.GetComponent<TextMeshProUGUI>().text = "Find the Exit!";
- // Destroy the enemy GameObject.
+ // destroy the enemy GameObject
             Destroy(GameObject.FindGameObjectWithTag("Enemy"));
       }
    }
 
    private void OnCollisionEnter(Collision collision){
       if (collision.gameObject.CompareTag("Enemy")){
- // Destroy the current object 
- //not now because respawn
- // Update the winText to display "You Lose!"
+ // just lose life
          LoseLife(true);
       }
    }

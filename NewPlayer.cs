@@ -94,12 +94,16 @@ public class NewPlayer : MonoBehaviour{
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         
-        // FIXED: toggle cursor lock with ESC (using New Input System)
+        // cursor lock
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame){
             if (Cursor.lockState == CursorLockMode.Locked)
                 Cursor.lockState = CursorLockMode.None;
             else
                 Cursor.lockState = CursorLockMode.Locked;
+        }
+        //pause
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) {
+         Time.timeScale = Time.timeScale == 0 ? 1 : 0;
         }
     }
 
